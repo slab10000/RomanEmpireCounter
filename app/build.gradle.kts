@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.blas.romanempirecounter"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -66,4 +66,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // For Glance support
+    implementation(libs.androidx.glance)
+
+    // For AppWidgets support
+    implementation(libs.androidx.glance.appwidget)
+
+    // For Wear-Tiles support
+    implementation(libs.androidx.glance.wear.tiles)
 }
