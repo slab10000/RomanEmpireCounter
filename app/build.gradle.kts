@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id ("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -75,4 +77,13 @@ dependencies {
 
     // For Wear-Tiles support
     implementation(libs.androidx.glance.wear.tiles)
+
+    // For Dagger-Hilt support
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

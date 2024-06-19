@@ -1,4 +1,4 @@
-package com.blas.romanempirecounter
+package com.blas.romanempirecounter.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.blas.romanempirecounter.ui.theme.RomanEmpireCounterTheme
+import com.blas.romanempirecounter.presentation.ui.theme.RomanEmpireCounterTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

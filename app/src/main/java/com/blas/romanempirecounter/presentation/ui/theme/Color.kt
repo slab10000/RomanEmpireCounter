@@ -1,4 +1,4 @@
-package com.blas.romanempirecounter.ui.theme
+package com.blas.romanempirecounter.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
