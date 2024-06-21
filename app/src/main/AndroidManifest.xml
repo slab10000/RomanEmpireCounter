@@ -31,5 +31,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/roman_empire_counter_widget_info" />
         </receiver>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 </manifest>
