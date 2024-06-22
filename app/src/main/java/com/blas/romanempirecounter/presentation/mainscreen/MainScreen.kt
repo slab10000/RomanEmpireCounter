@@ -1,6 +1,11 @@
 package com.blas.romanempirecounter.presentation.mainscreen
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -41,8 +46,16 @@ fun MainScreen(){
             .padding(70.dp),
             contentAlignment = Alignment.Center
         ){
-            //Text(intToRoman(counter.intValue))
-            AutoResizedText(intToRoman(counter.intValue))
+            AnimatedContent(
+                targetState = counter.intValue,
+                label = "",
+                transitionSpec = {
+                    fadeIn().togetherWith(fadeOut())
+                },
+            ) {counterIntValue ->
+                AutoResizedText(intToRoman(counterIntValue))
+            }
+
         }
     }
 }
