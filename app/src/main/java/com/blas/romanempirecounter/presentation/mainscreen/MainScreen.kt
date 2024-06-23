@@ -14,13 +14,18 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,11 +38,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.blas.romanempirecounter.R
 import com.blas.romanempirecounter.presentation.AutoResizedText
@@ -49,6 +57,13 @@ fun MainScreen(
     caesarQuote : String
 ){
     val counter = remember { mutableIntStateOf(0) }
+
+    //ClipBoard
+    /*val context = LocalContext.current
+    val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("CaesarQuote", caesarQuote)*/
+    val clipboard = LocalClipboardManager.current
+
 
     Column(
         modifier = Modifier
@@ -92,6 +107,7 @@ fun MainScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .weight(1f)
                 .padding(
                     if (hasToChangeSize) {
                         infiniteChangingPadding.value.dp
@@ -121,12 +137,48 @@ fun MainScreen(
                 }
 
             }
-            Spacer(modifier = Modifier.height(10.dp))
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+            ,
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
-                text = "- $caesarQuote",
-                style = TextStyle(fontStyle = FontStyle.Italic),
-                fontFamily = FontFamily(Font(R.font.cinzel))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, end = 20.dp),
+                text = "\"$caesarQuote\"",
+                style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
+                fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
+                fontSize = MaterialTheme.typography.headlineLarge.fontSize
             )
+            Spacer(modifier = Modifier.height(20.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 20.dp, end = 20.dp),
+                    text = " - Gaius Iulius Caesar",
+                    style = TextStyle(fontStyle = FontStyle.Italic),
+                    fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
+                    fontSize = MaterialTheme.typography.headlineSmall.fontSize
+                )
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Button(
+                onClick = {
+                    clipboard.setText(AnnotatedString("caesarQuote"))
+                },
+                //colors = ButtonColors(containerColor = )
+            ) {
+                Text(text = "Copy quote")
+            }
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 

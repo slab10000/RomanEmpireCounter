@@ -3,5 +3,6 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/cinzel</item>
         <item>@font/cinzel_decorative_black</item>
+        <item>@font/roboto_slab_thin</item>
     </array>
 </resources>
