@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.blas.romanempirecounter.presentation.mainscreen.MainScreen
+import com.blas.romanempirecounter.presentation.mainscreen.getRandomCaesarQuote
 import com.blas.romanempirecounter.presentation.ui.theme.RomanEmpireCounterTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = AppScreens.MainScreen.name
                 ){
                     composable(route = AppScreens.MainScreen.name) {
-                        MainScreen()
+                        MainScreen(getRandomCaesarQuote().quote)
                     }
 
                     composable(route = AppScreens.SecondScreen.name) {
@@ -61,24 +62,4 @@ fun GreetingPreview() {
     RomanEmpireCounterTheme {
         Greeting("Android")
     }
-}
-
-fun intToRoman(num: Int): String {
-    val romanNumerals = listOf(
-        Pair(1000, "M"), Pair(900, "CM"), Pair(500, "D"), Pair(400, "CD"),
-        Pair(100, "C"), Pair(90, "XC"), Pair(50, "L"), Pair(40, "XL"),
-        Pair(10, "X"), Pair(9, "IX"), Pair(5, "V"), Pair(4, "IV"), Pair(1, "I")
-    )
-
-    var number = num
-    val stringBuilder = StringBuilder()
-
-    for ((value, symbol) in romanNumerals) {
-        while (number >= value) {
-            stringBuilder.append(symbol)
-            number -= value
-        }
-    }
-
-    return stringBuilder.toString()
 }
