@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = AppScreens.MainScreen.name
                 ){
                     composable(route = AppScreens.MainScreen.name) {
-                        MainScreen(getRandomCaesarQuote().quote)
+                        MainScreen()
                     }
 
                     composable(route = AppScreens.SecondScreen.name) {
@@ -45,21 +45,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RomanEmpireCounterTheme {
-        Greeting("Android")
     }
 }
