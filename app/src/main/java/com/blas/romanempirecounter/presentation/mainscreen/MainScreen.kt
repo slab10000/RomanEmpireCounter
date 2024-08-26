@@ -16,7 +16,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,7 +57,7 @@ import com.blas.romanempirecounter.R
 import com.blas.romanempirecounter.presentation.AutoResizedText
 import kotlin.random.Random
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("RememberReturnType")
 @Composable
 fun MainScreen(
@@ -66,126 +68,144 @@ fun MainScreen(
     //Clipboard
     val clipboard = LocalClipboardManager.current
 
-
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val infiniteChangeSizeTransition = rememberInfiniteTransition(label = "")
-        val infiniteChangingPadding = infiniteChangeSizeTransition.animateFloat(
-            initialValue = 50.toFloat(),
-            targetValue = 40.toFloat(),
-            animationSpec = infiniteRepeatable(
-                animation = tween(1000, easing = LinearEasing),
-                repeatMode = RepeatMode.Reverse
-            ),
-            label = ""
-        )
-        var hasToChangeSize by remember {
-            mutableStateOf(true)
-        }
-
-        val onClickChangePadding = remember { Animatable(50f) }
-
-        LaunchedEffect(counter.intValue) {
-            onClickChangePadding.animateTo(
-                targetValue = 45f,
-                animationSpec = tween(100)
-            )
-            onClickChangePadding.animateTo(
-                targetValue = 50f,
-                animationSpec = tween(100)
-            )
-        }
-
-        AutoResizedText(
-            modifier = Modifier.padding(start = 30.dp, end = 30.dp,top = 30.dp),
-            text = "Roman Empire Counter")
-
-        AutoResizedText(
-            modifier = Modifier.padding(horizontal = 80.dp),
-            text = "Pulsa para incrementar")
-
         Column(
             modifier = Modifier
-                .weight(1f)
-                .padding(
-                    if (hasToChangeSize) {
-                        infiniteChangingPadding.value.dp
-                    } else {
-                        onClickChangePadding.value.dp
-                    }
-                ),
-        ) {
-            Box(modifier = Modifier
                 .fillMaxWidth()
-                .paint(painterResource(id = R.drawable.corona_de_laureles))
-                .clickableWithoutRipple {
-                    counter.intValue++
-                    hasToChangeSize = false
-                    caesarQuote.value = getRandomCaesarQuote().phrase
-                }
-                .padding(95.dp),
-                contentAlignment = Alignment.Center
-            ){
-                AnimatedContent(
-                    targetState = counter.intValue,
-                    label = "",
-                    transitionSpec = {
-                        fadeIn().togetherWith(fadeOut())
-                    },
-                ) {counterIntValue ->
-                    AutoResizedText(intToRoman(counterIntValue))
-                }
-
-            }
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
-            ,
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AnimatedContent(
-                targetState = caesarQuote.value,
-                transitionSpec = {
-                    (slideInHorizontally { height -> height } + fadeIn()).togetherWith(
-                        slideOutHorizontally { height -> -height } + fadeOut())
-                    .using(
-                        SizeTransform(clip = false)
-                    )
-                }, label = ""
-            ){ caesarQuote ->
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp),
-                    text = "\"${caesarQuote}\"",
-                    style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
-                    fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
-                    fontSize = MaterialTheme.typography.headlineLarge.fontSize
+            val infiniteChangeSizeTransition = rememberInfiniteTransition(label = "")
+            val infiniteChangingPadding = infiniteChangeSizeTransition.animateFloat(
+                initialValue = 50.toFloat(),
+                targetValue = 40.toFloat(),
+                animationSpec = infiniteRepeatable(
+                    animation = tween(1000, easing = LinearEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = ""
+            )
+            var hasToChangeSize by remember {
+                mutableStateOf(true)
+            }
+
+            /** Variable que cambia de valor cada vez que se clicka
+             * hace la animación de agrandarse un poco con el click
+             */
+            val onClickChangePadding = remember { Animatable(50f) }
+
+            LaunchedEffect(counter.intValue) {
+                onClickChangePadding.animateTo(
+                    targetValue = 45f,
+                    animationSpec = tween(100)
+                )
+                onClickChangePadding.animateTo(
+                    targetValue = 50f,
+                    animationSpec = tween(100)
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
-            Spacer(modifier = Modifier.height(20.dp))
-            Button(
-                onClick = {
-                    clipboard.setText(AnnotatedString(caesarQuote.value))
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3b3f40))
+            AutoResizedText(
+                modifier = Modifier.padding(start = 30.dp, end = 30.dp,top = 30.dp),
+                text = "Roman Empire Counter")
+
+            AutoResizedText(
+                modifier = Modifier.padding(horizontal = 40.dp),
+                text = "Press to increase / Hold to reset")
+
+            Column(
+                modifier = Modifier
+                    .padding(
+                        if (hasToChangeSize) {
+                            infiniteChangingPadding.value.dp
+                        } else {
+                            onClickChangePadding.value.dp
+                        }
+                    ),
             ) {
-                Text(text = "Copy quote")
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .paint(painterResource(id = R.drawable.corona_de_laureles))
+                    .combinedClickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {
+                            counter.intValue++
+                            hasToChangeSize = false
+                            caesarQuote.value = getRandomCaesarQuote().phrase
+                        },
+                        onLongClick = {
+                            counter.intValue = 0
+                        }
+                    )
+                    .padding(95.dp),
+                    contentAlignment = Alignment.Center
+                ){
+                    AnimatedContent(
+                        targetState = counter.intValue,
+                        label = "",
+                        transitionSpec = {
+                            fadeIn().togetherWith(fadeOut())
+                        },
+                    ) {counterIntValue ->
+                        AutoResizedText(intToRoman(counterIntValue))
+                    }
+
+                }
             }
-            Spacer(modifier = Modifier.height(100.dp))
+
+            Box(
+                 contentAlignment = Alignment.BottomCenter
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                    ,
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AnimatedContent(
+                        targetState = caesarQuote.value,
+                        transitionSpec = {
+                            (slideInHorizontally { height -> height } + fadeIn()).togetherWith(
+                                slideOutHorizontally { height -> -height } + fadeOut())
+                                .using(
+                                    SizeTransform(clip = false)
+                                )
+                        }, label = ""
+                    ){ caesarQuote ->
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 20.dp, end = 20.dp),
+                            text = "\"${caesarQuote}\"",
+                            style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
+                            fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
+                            fontSize = MaterialTheme.typography.headlineLarge.fontSize
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(40.dp))
+
+                    Button(
+                        onClick = {
+                            clipboard.setText(AnnotatedString(caesarQuote.value))
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3b3f40))
+                    ) {
+                        Text(text = "Copy quote")
+                    }
+                    Spacer(modifier = Modifier.height(80.dp))
+                }
+            }
         }
     }
 
+
 }
 
-@SuppressLint("UnnecessaryComposedModifier")
+/*@SuppressLint("UnnecessaryComposedModifier")
 fun Modifier.clickableWithoutRipple(
     interactionSource: MutableInteractionSource = MutableInteractionSource(),
     onClick: () -> Unit
@@ -199,7 +219,7 @@ fun Modifier.clickableWithoutRipple(
             )
         )
     }
-)
+)*/
 
 fun intToRoman(num: Int): String {
     if(num == 0) return "-"
