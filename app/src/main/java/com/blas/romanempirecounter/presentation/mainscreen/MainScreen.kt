@@ -23,13 +23,20 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -175,18 +182,48 @@ fun MainScreen(
                                 )
                         }, label = ""
                     ){ caesarQuote ->
-                        Text(
+                        /*Row(
+                            modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+                        ) {
+                            Text(
+                                modifier = Modifier,
+                                    //.fillMaxWidth()
+                                    //.padding(start = 20.dp, end = 20.dp),
+                                text = "\"${caesarQuote}\"",
+                                style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
+                                fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
+                            )
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Icon(
+                                modifier = Modifier.size(20.dp)
+                                    .weight(1f),
+                                imageVector = Icons.Filled.ContentCopy,
+                                contentDescription = "")
+                        }*/
+                        Box(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp),
-                            text = "\"${caesarQuote}\"",
-                            style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
-                            fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
-                            fontSize = MaterialTheme.typography.headlineLarge.fontSize
-                        )
+                                .padding(start = 20.dp, end = 50.dp),
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                .padding(start = 35.dp, end = 35.dp),
+                                text = "\"${caesarQuote}\"",
+                                style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
+                                fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
+                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .size(30.dp)
+                                    .align(Alignment.TopEnd)
+                                    .clickable { clipboard.setText(AnnotatedString(caesarQuote)) },
+                                imageVector = Icons.Filled.ContentCopy,
+                                contentDescription = "")
+                        }
                     }
 
-                    Spacer(modifier = Modifier.height(40.dp))
+                    /*Spacer(modifier = Modifier.height(40.dp))
 
                     Button(
                         onClick = {
@@ -195,8 +232,8 @@ fun MainScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3b3f40))
                     ) {
                         Text(text = "Copy quote")
-                    }
-                    Spacer(modifier = Modifier.height(80.dp))
+                    }*/
+                    Spacer(modifier = Modifier.height(170.dp))
                 }
             }
         }
@@ -204,22 +241,6 @@ fun MainScreen(
 
 
 }
-
-/*@SuppressLint("UnnecessaryComposedModifier")
-fun Modifier.clickableWithoutRipple(
-    interactionSource: MutableInteractionSource = MutableInteractionSource(),
-    onClick: () -> Unit
-) = composed(
-    factory = {
-        this.then(
-            Modifier.clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = { onClick() }
-            )
-        )
-    }
-)*/
 
 fun intToRoman(num: Int): String {
     if(num == 0) return "-"

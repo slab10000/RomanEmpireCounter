@@ -82,6 +82,9 @@ dependencies {
     // For Dagger-Hilt support
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    //Extended material icons
+    implementation (libs.androidx.material.icons.extended)
 }
 
 // Allow references to generated code
