@@ -1,8 +1,7 @@
-package com.blas.romanempirecounter.presentation.mainscreen
+package com.blas.romanempirecounter.presentation.mainpage
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -23,19 +22,14 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -48,10 +42,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -60,8 +53,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.view.HapticFeedbackConstantsCompat
 import com.blas.romanempirecounter.R
-import com.blas.romanempirecounter.presentation.AutoResizedText
+import com.blas.romanempirecounter.presentation.composables.AutoResizedText
 import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -74,6 +68,9 @@ fun MainScreen(
 
     //Clipboard
     val clipboard = LocalClipboardManager.current
+
+    //view for haptic feedback
+    val view = LocalView.current
 
     Box(
         modifier = Modifier
@@ -138,11 +135,13 @@ fun MainScreen(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = {
+                            view.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
                             counter.intValue++
                             hasToChangeSize = false
                             caesarQuote.value = getRandomCaesarQuote().phrase
                         },
                         onLongClick = {
+                            view.performHapticFeedback(HapticFeedbackConstantsCompat.LONG_PRESS)
                             counter.intValue = 0
                         }
                     )
@@ -182,28 +181,10 @@ fun MainScreen(
                                 )
                         }, label = ""
                     ){ caesarQuote ->
-                        /*Row(
-                            modifier = Modifier.padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier,
-                                    //.fillMaxWidth()
-                                    //.padding(start = 20.dp, end = 20.dp),
-                                text = "\"${caesarQuote}\"",
-                                style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
-                                fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
-                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
-                            )
-                            Spacer(modifier = Modifier.width(5.dp))
-                            Icon(
-                                modifier = Modifier.size(20.dp)
-                                    .weight(1f),
-                                imageVector = Icons.Filled.ContentCopy,
-                                contentDescription = "")
-                        }*/
                         Box(
                             modifier = Modifier
-                                .padding(start = 20.dp, end = 50.dp),
+                                .padding(start = 20.dp, end = 50.dp)
+                                .clickable { clipboard.setText(AnnotatedString(caesarQuote)) },
                         ) {
                             Text(
                                 modifier = Modifier
@@ -215,25 +196,13 @@ fun MainScreen(
                             )
                             Icon(
                                 modifier = Modifier
-                                    .size(30.dp)
-                                    .align(Alignment.TopEnd)
-                                    .clickable { clipboard.setText(AnnotatedString(caesarQuote)) },
+                                    .size(20.dp)
+                                    .align(Alignment.TopEnd),
                                 imageVector = Icons.Filled.ContentCopy,
                                 contentDescription = "")
                         }
                     }
-
-                    /*Spacer(modifier = Modifier.height(40.dp))
-
-                    Button(
-                        onClick = {
-                            clipboard.setText(AnnotatedString(caesarQuote.value))
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3b3f40))
-                    ) {
-                        Text(text = "Copy quote")
-                    }*/
-                    Spacer(modifier = Modifier.height(170.dp))
+                    Spacer(modifier = Modifier.height(150.dp))
                 }
             }
         }

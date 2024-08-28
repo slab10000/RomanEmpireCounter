@@ -1,4 +1,4 @@
-package com.blas.romanempirecounter.presentation.mainscreen
+package com.blas.romanempirecounter.presentation.mainpage
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

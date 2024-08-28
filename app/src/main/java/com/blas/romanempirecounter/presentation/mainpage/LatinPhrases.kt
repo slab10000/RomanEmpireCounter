@@ -1,4 +1,4 @@
-package com.blas.romanempirecounter.presentation.mainscreen
+package com.blas.romanempirecounter.presentation.mainpage
 
 enum class LatinPhrases(val phrase: String) {
     ALEA_IACTA_EST("Alea iacta est"),
