@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id ("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp") // Asegúrate de usar la versión correcta
 }
 
 android {
@@ -85,6 +86,13 @@ dependencies {
 
     //Extended material icons
     implementation (libs.androidx.material.icons.extended)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+
+    // To use Kotlin Symbol Processing (KSP)
+    ksp(libs.androidx.room.compiler)
 }
 
 // Allow references to generated code
