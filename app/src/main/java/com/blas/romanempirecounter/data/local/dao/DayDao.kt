@@ -22,7 +22,7 @@ interface DayDao{
     fun getLastSevenDays(): Flow<List<Day>>
 
     @Query("SELECT * FROM day WHERE date LIKE :date")
-    suspend fun findByDate(date: String, last: String): Day
+    suspend fun findByDate(date: String): Day
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(day: Day)

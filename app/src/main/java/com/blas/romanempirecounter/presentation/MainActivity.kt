@@ -20,7 +20,9 @@ import androidx.navigation.compose.rememberNavController
 import com.blas.romanempirecounter.presentation.composables.PagerIndicator
 import com.blas.romanempirecounter.presentation.mainpage.MainScreen
 import com.blas.romanempirecounter.presentation.ui.theme.RomanEmpireCounterTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {

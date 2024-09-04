@@ -82,6 +82,7 @@ dependencies {
 
     // For Dagger-Hilt support
     implementation(libs.hilt.android)
+    implementation (libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.android.compiler)
 
     //Extended material icons
@@ -93,6 +94,9 @@ dependencies {
 
     // To use Kotlin Symbol Processing (KSP)
     ksp(libs.androidx.room.compiler)
+
+    //usar corrutinas con room
+    implementation (libs.room.ktx)
 }
 
 // Allow references to generated code

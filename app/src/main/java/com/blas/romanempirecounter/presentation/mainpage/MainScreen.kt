@@ -56,15 +56,18 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
 import com.blas.romanempirecounter.R
 import com.blas.romanempirecounter.presentation.composables.AutoResizedText
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.blas.romanempirecounter.presentation.mainpage.MainScreenEvent.CounterOnClick
 import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("RememberReturnType")
 @Composable
 fun MainScreen(
+    viewModel: MainScreenViewModel = hiltViewModel()
 ){
+    val state = viewModel.state
     val caesarQuote = remember { mutableStateOf(getRandomCaesarQuote().phrase) }
-    val counter = remember { mutableIntStateOf(0) }
 
     //Clipboard
     val clipboard = LocalClipboardManager.current
@@ -99,7 +102,7 @@ fun MainScreen(
              */
             val onClickChangePadding = remember { Animatable(50f) }
 
-            LaunchedEffect(counter.intValue) {
+            LaunchedEffect(viewModel.state.value.counter) {
                 onClickChangePadding.animateTo(
                     targetValue = 45f,
                     animationSpec = tween(100)
@@ -135,21 +138,22 @@ fun MainScreen(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = {
+                            viewModel.onEvent(CounterOnClick(state.value.counter + 1))
                             view.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
-                            counter.intValue++
+                            //counter.intValue++
                             hasToChangeSize = false
                             caesarQuote.value = getRandomCaesarQuote().phrase
                         },
                         onLongClick = {
                             view.performHapticFeedback(HapticFeedbackConstantsCompat.LONG_PRESS)
-                            counter.intValue = 0
+                            viewModel.onEvent(CounterOnClick(0))
                         }
                     )
                     .padding(95.dp),
                     contentAlignment = Alignment.Center
                 ){
                     AnimatedContent(
-                        targetState = counter.intValue,
+                        targetState = state.value.counter,
                         label = "",
                         transitionSpec = {
                             fadeIn().togetherWith(fadeOut())
