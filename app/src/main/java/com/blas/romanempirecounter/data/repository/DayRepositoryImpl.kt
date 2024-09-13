@@ -17,6 +17,10 @@ class DayRepositoryImpl(
         return toDayModelFlowList(dao.getLastSevenDays())
     }
 
+    override fun getAll(): Flow<List<DayModel>> {
+        return toDayModelFlowList(dao.getAll())
+    }
+
     override suspend fun insertDay(day: DayModel) {
         dao.insertAll(
             Day(

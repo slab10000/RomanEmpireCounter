@@ -6,8 +6,12 @@ import com.blas.romanempirecounter.data.local.database.AppDatabase
 import com.blas.romanempirecounter.data.local.database.AppDatabase.Companion.DATABASE_NAME
 import com.blas.romanempirecounter.data.repository.DayRepositoryImpl
 import com.blas.romanempirecounter.domain.repository.DayRepository
-import com.blas.romanempirecounter.domain.usecase.GetLastSevenDaysUseCase
-import com.blas.romanempirecounter.domain.usecase.GetLastSevenDaysUseCaseImpl
+import com.blas.romanempirecounter.domain.usecase.GetAllDaysUseCase
+import com.blas.romanempirecounter.domain.usecase.GetAllDaysUseCaseImpl
+import com.blas.romanempirecounter.domain.usecase.GetLastDayUseCase
+import com.blas.romanempirecounter.domain.usecase.GetLastDayUseCaseImpl
+import com.blas.romanempirecounter.domain.usecase.InsertDayUseCase
+import com.blas.romanempirecounter.domain.usecase.InsertDayUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,8 +47,20 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetLastSevenDaysUseCase(repository: DayRepository): GetLastSevenDaysUseCase {
-        return GetLastSevenDaysUseCaseImpl(repository)
+    fun provideGetAllDaysUseCase(repository: DayRepository): GetAllDaysUseCase {
+        return GetAllDaysUseCaseImpl(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInsertDayUseCase(repository: DayRepository): InsertDayUseCase {
+        return InsertDayUseCaseImpl(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetLastDayUseCase(repository: DayRepository): GetLastDayUseCase {
+        return GetLastDayUseCaseImpl(repository)
     }
 
 }

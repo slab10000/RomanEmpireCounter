@@ -1,6 +1,5 @@
 package com.blas.romanempirecounter.domain.repository
 
-import com.blas.romanempirecounter.data.local.entity.Day
 import com.blas.romanempirecounter.domain.model.DayModel
 import kotlinx.coroutines.flow.Flow
 
@@ -8,6 +7,8 @@ import kotlinx.coroutines.flow.Flow
 interface DayRepository {
 
     fun getLastSevenDays(): Flow<List<DayModel>>
+
+    fun getAll(): Flow<List<DayModel>>
 
     suspend fun insertDay(day: DayModel)
 

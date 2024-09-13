@@ -57,6 +57,7 @@ import androidx.core.view.HapticFeedbackConstantsCompat
 import com.blas.romanempirecounter.R
 import com.blas.romanempirecounter.presentation.composables.AutoResizedText
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.blas.romanempirecounter.domain.model.DayModel
 import com.blas.romanempirecounter.presentation.mainpage.MainScreenEvent.CounterOnClick
 import kotlin.random.Random
 
@@ -139,6 +140,17 @@ fun MainScreen(
                         indication = null,
                         onClick = {
                             viewModel.onEvent(CounterOnClick(state.value.counter + 1))
+
+                            viewModel.onEvent(
+                                MainScreenEvent.InsertDayEvent(
+                                    day = DayModel(
+                                        count = state.value.counter,
+                                        date = "Blas",
+                                        uid = state.value.counter
+                                    )
+                                )
+                            )
+
                             view.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
                             //counter.intValue++
                             hasToChangeSize = false

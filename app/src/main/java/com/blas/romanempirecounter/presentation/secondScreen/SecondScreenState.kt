@@ -1,8 +1,8 @@
-package com.blas.romanempirecounter.presentation.mainpage
+package com.blas.romanempirecounter.presentation.secondScreen
 
 import com.blas.romanempirecounter.domain.model.DayModel
 
-data class MainScreenState (
+data class SecondScreenState (
     var counter: Int = 0,
     val allDays: List<DayModel> = emptyList()
 )

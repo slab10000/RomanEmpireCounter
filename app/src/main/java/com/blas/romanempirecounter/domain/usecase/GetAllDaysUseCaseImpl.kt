@@ -4,12 +4,12 @@ import com.blas.romanempirecounter.domain.model.DayModel
 import com.blas.romanempirecounter.domain.repository.DayRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetLastSevenDaysUseCaseImpl(
+class GetAllDaysUseCaseImpl(
     private val repository: DayRepository
-): GetLastSevenDaysUseCase {
+): GetAllDaysUseCase {
 
-    override suspend operator fun invoke(): Flow<List<DayModel>> {
-        return repository.getLastSevenDays()
+    override operator fun invoke(): Flow<List<DayModel>> {
+        return repository.getAll()
     }
 
 }

@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.blas.romanempirecounter.presentation.composables.PagerIndicator
 import com.blas.romanempirecounter.presentation.mainpage.MainScreen
+import com.blas.romanempirecounter.presentation.secondScreen.composables.SecondScreen
 import com.blas.romanempirecounter.presentation.ui.theme.RomanEmpireCounterTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,7 +44,7 @@ class MainActivity : ComponentActivity() {
                                 HorizontalPager(state = pagerState) { page ->
                                     when(page){
                                         0 -> MainScreen()
-                                        1 -> Box(modifier = Modifier.fillMaxSize()){ Text(text = "Holiii") }
+                                        1 -> SecondScreen()//Box(modifier = Modifier.fillMaxSize()){ Text(text = "Holiii") }
                                     }
                                 }
                             }
