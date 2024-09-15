@@ -10,6 +10,8 @@ interface DayRepository {
 
     fun getAll(): Flow<List<DayModel>>
 
+    suspend fun getLastDay(): DayModel
+
     suspend fun insertDay(day: DayModel)
 
 }

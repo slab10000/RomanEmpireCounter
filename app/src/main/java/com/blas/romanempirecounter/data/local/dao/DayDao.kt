@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface DayDao{
 
     //Using a flow makes the value be updated if the table changes
-    @Query("SELECT * FROM day")
+    @Query("SELECT * FROM day ORDER BY uid DESC")
     fun getAll(): Flow<List<Day>>
 
     @Query("SELECT * FROM day WHERE uid IN (:dayIds)")
@@ -23,6 +23,9 @@ interface DayDao{
 
     @Query("SELECT * FROM day WHERE date LIKE :date")
     suspend fun findByDate(date: String): Day
+
+    @Query("SELECT * FROM day ORDER BY uid DESC LIMIT 1")
+    suspend fun getLastDay(): Day?
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(day: Day)

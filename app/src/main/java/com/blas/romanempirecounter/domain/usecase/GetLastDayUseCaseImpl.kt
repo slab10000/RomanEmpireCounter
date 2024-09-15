@@ -7,8 +7,8 @@ class GetLastDayUseCaseImpl(
     private val repository: DayRepository
 ): GetLastDayUseCase {
 
-    override suspend operator fun invoke(day: DayModel){
-
+    override suspend operator fun invoke(): DayModel{
+        return repository.getLastDay()
     }
 
 }
