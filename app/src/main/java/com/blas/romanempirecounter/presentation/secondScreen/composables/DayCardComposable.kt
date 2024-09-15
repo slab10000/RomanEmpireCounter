@@ -41,7 +41,7 @@ fun DayCardComposable(
         modifier = Modifier
             .shadow(8.dp, shape = RoundedCornerShape(16.dp))
             .background(
-                color = Color(0xffb5c7a4),
+                color = Color(0xff3b3f40),
                 shape = RoundedCornerShape(16.dp)
             )
             .fillMaxWidth()
@@ -62,12 +62,14 @@ fun DayCardComposable(
         ) {
             Text(
                 text = "Date: $date",
-                fontFamily = FontFamily(Font(R.font.cinzel))
+                fontFamily = FontFamily(Font(R.font.cinzel)),
+                color = Color.White
             )
             Spacer(modifier = Modifier.size(10.dp))
             Text(
                 text = "Counter: $count",
-                fontFamily = FontFamily(Font(R.font.cinzel))
+                fontFamily = FontFamily(Font(R.font.cinzel)),
+                color = Color.White
             )
         }
     }
