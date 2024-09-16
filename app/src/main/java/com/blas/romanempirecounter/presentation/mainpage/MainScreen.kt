@@ -52,6 +52,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
 import com.blas.romanempirecounter.R
@@ -94,9 +95,6 @@ fun MainScreen(
                 ),
                 label = ""
             )
-            var hasToChangeSize by remember {
-                mutableStateOf(true)
-            }
 
             /** Variable que cambia de valor cada vez que se clicka
              * hace la animación de agrandarse un poco con el click
@@ -125,7 +123,7 @@ fun MainScreen(
             Column(
                 modifier = Modifier
                     .padding(
-                        if (hasToChangeSize) {
+                        if (viewModel.state.value.isAnimationOn) {
                             infiniteChangingPadding.value.dp
                         } else {
                             onClickChangePadding.value.dp
@@ -152,8 +150,6 @@ fun MainScreen(
                             )
 
                             view.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
-                            //counter.intValue++
-                            hasToChangeSize = false
                             caesarQuote.value = getRandomCaesarQuote().phrase
                         },
                         onLongClick = {
@@ -178,16 +174,19 @@ fun MainScreen(
             }
 
             Box(
+                modifier = Modifier.padding(top = 10.dp),
                  contentAlignment = Alignment.BottomCenter
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(bottom = 100.dp)
                     ,
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     AnimatedContent(
+                        contentAlignment = Alignment.BottomCenter,
                         targetState = caesarQuote.value,
                         transitionSpec = {
                             (slideInHorizontally { height -> height } + fadeIn()).togetherWith(
@@ -204,7 +203,9 @@ fun MainScreen(
                         ) {
                             Text(
                                 modifier = Modifier
-                                .padding(start = 35.dp, end = 35.dp),
+                                .padding(start = 35.dp, end = 35.dp)
+                                .align(Alignment.TopCenter),
+                                textAlign = TextAlign.Center,
                                 text = "\"${caesarQuote}\"",
                                 style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
                                 fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
@@ -218,7 +219,6 @@ fun MainScreen(
                                 contentDescription = "")
                         }
                     }
-                    Spacer(modifier = Modifier.height(150.dp))
                 }
             }
         }

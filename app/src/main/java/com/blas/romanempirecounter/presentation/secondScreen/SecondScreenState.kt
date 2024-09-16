@@ -4,5 +4,6 @@ import com.blas.romanempirecounter.domain.model.DayModel
 
 data class SecondScreenState (
     var counter: Int = 0,
-    val allDays: List<DayModel> = emptyList()
+    val allDays: List<DayModel> = emptyList(),
+    val totalThisWeek: Int = 15
 )

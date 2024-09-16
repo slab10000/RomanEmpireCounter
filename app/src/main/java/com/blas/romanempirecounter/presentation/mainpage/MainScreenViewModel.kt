@@ -53,7 +53,10 @@ class MainScreenViewModel @Inject constructor(
     }
 
     private fun onCounterClickEvent(counter: Int){
-        _state.value = state.value.copy(counter = counter)
+        _state.value = state.value.copy(
+            counter = counter,
+            isAnimationOn = counter == 0
+        )
         todayDay = todayDay.copy(count = _state.value.counter)
         insertDay()
     }
