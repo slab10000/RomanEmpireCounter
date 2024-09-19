@@ -41,6 +41,7 @@ class MainScreenViewModel @Inject constructor(
                     date = today,
                     count = 0
                 )
+                onCounterClickEvent(0)
             }
         }
     }

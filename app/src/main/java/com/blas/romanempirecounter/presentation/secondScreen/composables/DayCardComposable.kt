@@ -25,7 +25,8 @@ import com.blas.romanempirecounter.R
 fun DayCardComposable(
     modifier: Modifier = Modifier,
     date: String,
-    count: String
+    count: String,
+    isToday: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -46,14 +47,14 @@ fun DayCardComposable(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Date: $date",
+                text = if(isToday)"TODAY: " else "Date: $date",
                 fontFamily = FontFamily(Font(R.font.cinzel)),
             )
             Spacer(modifier = Modifier.size(10.dp))
             Row(
                 modifier = Modifier
                     .background(
-                        color = Color(0xff3b3f40),
+                        color = if(isToday) Color(0xffa7d979) else Color(0xff3b3f40),
                         shape = RoundedCornerShape(6.dp)
                     )
                     .padding(horizontal = 20.dp)
@@ -61,7 +62,7 @@ fun DayCardComposable(
                 Text(
                     text = "Counter: $count",
                     fontFamily = FontFamily(Font(R.font.cinzel)),
-                    color = Color.White
+                    color = if(isToday) Color.Black else Color.White
                 )
             }
 
