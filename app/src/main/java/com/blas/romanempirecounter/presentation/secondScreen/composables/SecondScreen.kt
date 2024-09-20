@@ -139,13 +139,6 @@ fun SecondScreen(
                         )
                     }
                 }
-                Text(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    text = " :",
-                    fontFamily = FontFamily(Font(R.font.cinzel)),
-                    color = Color.White
-                )
-
             }
             Spacer(modifier = Modifier.size(15.dp))
             Text(
