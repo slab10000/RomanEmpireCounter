@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -58,17 +59,17 @@ import androidx.core.view.HapticFeedbackConstantsCompat
 import com.blas.romanempirecounter.R
 import com.blas.romanempirecounter.presentation.composables.AutoResizedText
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.blas.romanempirecounter.domain.model.DayModel
 import com.blas.romanempirecounter.presentation.mainpage.MainScreenEvent.CounterOnClick
+import dagger.hilt.android.internal.lifecycle.HiltViewModelFactory
 import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("RememberReturnType")
 @Composable
-fun MainScreen(
-    viewModel: MainScreenViewModel = hiltViewModel()
-){
-    val state = viewModel.state
+fun MainScreen(){
     val caesarQuote = remember { mutableStateOf(getRandomCaesarQuote().phrase) }
 
     //Clipboard
@@ -76,6 +77,12 @@ fun MainScreen(
 
     //view for haptic feedback
     val view = LocalView.current
+
+    // Obtener el ViewModelStoreOwner actual
+    val viewModelStoreOwner = LocalViewModelStoreOwner.current
+
+    // Obtener el ViewModel usando hiltViewModel() con el ViewModelStoreOwner actual
+    val viewModel: MainScreenViewModel = hiltViewModel(viewModelStoreOwner!!)
 
     Box(
         modifier = Modifier
@@ -137,17 +144,7 @@ fun MainScreen(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = {
-                            viewModel.onEvent(CounterOnClick(state.value.counter + 1))
-
-                            viewModel.onEvent(
-                                MainScreenEvent.InsertDayEvent(
-                                    day = DayModel(
-                                        count = state.value.counter,
-                                        date = "Blas",
-                                        uid = state.value.counter
-                                    )
-                                )
-                            )
+                            viewModel.onEvent(CounterOnClick(viewModel.state.value.counter + 1))
 
                             view.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
                             caesarQuote.value = getRandomCaesarQuote().phrase
@@ -161,7 +158,7 @@ fun MainScreen(
                     contentAlignment = Alignment.Center
                 ){
                     AnimatedContent(
-                        targetState = state.value.counter,
+                        targetState = viewModel.state.value.counter,
                         label = "",
                         transitionSpec = {
                             fadeIn().togetherWith(fadeOut())
@@ -203,13 +200,13 @@ fun MainScreen(
                         ) {
                             Text(
                                 modifier = Modifier
-                                .padding(start = 35.dp, end = 35.dp)
-                                .align(Alignment.TopCenter),
+                                    .padding(start = 35.dp, end = 35.dp)
+                                    .align(Alignment.TopCenter),
                                 textAlign = TextAlign.Center,
                                 text = "\"${caesarQuote}\"",
                                 style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
                                 fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
-                                fontSize = MaterialTheme.typography.headlineLarge.fontSize
+                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
                             )
                             Icon(
                                 modifier = Modifier

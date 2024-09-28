@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.isUnspecified
 import com.blas.romanempirecounter.R
 
@@ -22,7 +23,8 @@ fun AutoResizedText(
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.displayLarge,
     fontFamily: FontFamily = FontFamily(Font(R.font.cinzel)),
-    color: Color = style.color
+    color: Color = style.color,
+    fontWeight: FontWeight? = null
 ) {
     var resizedTextStyle by remember {
         mutableStateOf(style)
@@ -57,6 +59,7 @@ fun AutoResizedText(
                 shouldDraw = true
             }
         },
-        fontFamily = fontFamily
+        fontFamily = fontFamily,
+        fontWeight = fontWeight
     )
 }

@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blas.romanempirecounter.R
+import com.blas.romanempirecounter.presentation.composables.AutoResizedText
 import com.blas.romanempirecounter.presentation.mainpage.intToRoman
 import com.blas.romanempirecounter.presentation.secondScreen.FilterTypes.MONTH
 import com.blas.romanempirecounter.presentation.secondScreen.FilterTypes.SEVEN_DAYS
@@ -141,14 +142,21 @@ fun SecondScreen(
                 }
             }
             Spacer(modifier = Modifier.size(15.dp))
-            Text(
+            AutoResizedText(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = intToRoman(viewModel.secondState.value.totalCount),
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.cinzel)),
+                color = Color.White
+            )
+            /*Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 fontSize = 50.sp,
                 fontWeight = FontWeight.Bold,
                 text = intToRoman(viewModel.secondState.value.totalCount),
                 fontFamily = FontFamily(Font(R.font.cinzel)),
                 color = Color.White
-            )
+            )*/
         }
 
         LazyColumn(

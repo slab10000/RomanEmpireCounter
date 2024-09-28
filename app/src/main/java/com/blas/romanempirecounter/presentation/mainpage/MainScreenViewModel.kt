@@ -1,5 +1,6 @@
 package com.blas.romanempirecounter.presentation.mainpage
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,8 +9,10 @@ import com.blas.romanempirecounter.domain.model.DayModel
 import com.blas.romanempirecounter.domain.usecase.GetLastDayUseCase
 import com.blas.romanempirecounter.domain.usecase.InsertDayUseCase
 import com.blas.romanempirecounter.presentation.mainpage.MainScreenEvent.CounterOnClick
+import com.blas.romanempirecounter.presentation.mainpage.MainScreenEvent.InitializeDayEvent
 import com.blas.romanempirecounter.presentation.mainpage.MainScreenEvent.InsertDayEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -29,40 +32,27 @@ class MainScreenViewModel @Inject constructor(
     private lateinit var todayDay: DayModel
 
     init {
-        viewModelScope.launch {
-            getLastDay()
-            val today = getTodayDate()
-            if(lastDay.date == today){
-                state.value.counter = lastDay.count?:0
-                todayDay = lastDay.copy()
-            }else{
-                todayDay = DayModel(
-                    uid = lastDay.uid + 1,
-                    date = today,
-                    count = 0
-                )
-                onCounterClickEvent(0)
-            }
-        }
+        initializeDay()
     }
 
     fun onEvent(event: MainScreenEvent){
         when(event){
             is CounterOnClick -> onCounterClickEvent(event.counter)
-            is InsertDayEvent -> insertDay() // NO hace falta
+            is InsertDayEvent -> onInsertDayEvent()
+            is InitializeDayEvent -> initializeDay()
         }
     }
 
     private fun onCounterClickEvent(counter: Int){
-        _state.value = state.value.copy(
+        _state.value = _state.value.copy(
             counter = counter,
             isAnimationOn = counter == 0
         )
         todayDay = todayDay.copy(count = _state.value.counter)
-        insertDay()
+        onInsertDayEvent()
     }
 
-    private fun insertDay(){
+    private fun onInsertDayEvent(){
         viewModelScope.launch {
             insertDayUseCase(todayDay)
         }
@@ -76,5 +66,39 @@ class MainScreenViewModel @Inject constructor(
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         return LocalDateTime.now().format(formatter)
     }
+
+    private fun initializeDay(){
+        viewModelScope.launch {
+            getLastDay()
+            val today = getTodayDate()
+            if(lastDay.date == today){
+                _state.value = _state.value.copy(
+                    counter = lastDay.count?:0
+                )
+                //state.value.counter = lastDay.count?:0
+                todayDay = lastDay.copy()
+            }else{
+                Log.i("mitag", "se ha metido en el else")
+                _state.value = _state.value.copy(
+                    counter = 0
+                )
+                todayDay = DayModel(
+                    uid = lastDay.uid + 1,
+                    date = today,
+                    count = 0
+                )
+                onInsertDayEvent()
+                Log.i("mitag", "el día se ha cambiado a $todayDay y el contador a ${_state.value.counter}")
+                Log.i("mitag", "el día se ha cambiado a $todayDay y el contador del state publico a ${state.value.counter}")
+            }
+        }
+    }
+
+    fun resetDay(){
+        viewModelScope.launch {
+            _state.value = _state.value.copy(counter = 0)
+        }
+    }
+
 
 }
