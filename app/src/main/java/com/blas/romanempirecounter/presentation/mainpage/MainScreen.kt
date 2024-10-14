@@ -177,7 +177,7 @@ fun MainScreen(){
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = 100.dp)
+                        .padding(bottom = 120.dp)
                     ,
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -191,7 +191,8 @@ fun MainScreen(){
                                 .using(
                                     SizeTransform(clip = false)
                                 )
-                        }, label = ""
+                        },
+                        label = ""
                     ){ caesarQuote ->
                         Box(
                             modifier = Modifier
@@ -200,13 +201,13 @@ fun MainScreen(){
                         ) {
                             Text(
                                 modifier = Modifier
-                                    .padding(start = 35.dp, end = 35.dp)
+                                    .padding(start = 30.dp, end = 30.dp)
                                     .align(Alignment.TopCenter),
                                 textAlign = TextAlign.Center,
                                 text = "\"${caesarQuote}\"",
                                 style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
                                 fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                                fontSize = MaterialTheme.typography.headlineSmall.fontSize
                             )
                             Icon(
                                 modifier = Modifier
