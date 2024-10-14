@@ -75,10 +75,8 @@ class MainScreenViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     counter = lastDay.count?:0
                 )
-                //state.value.counter = lastDay.count?:0
                 todayDay = lastDay.copy()
             }else{
-                Log.i("mitag", "se ha metido en el else")
                 _state.value = _state.value.copy(
                     counter = 0
                 )
@@ -88,8 +86,6 @@ class MainScreenViewModel @Inject constructor(
                     count = 0
                 )
                 onInsertDayEvent()
-                Log.i("mitag", "el día se ha cambiado a $todayDay y el contador a ${_state.value.counter}")
-                Log.i("mitag", "el día se ha cambiado a $todayDay y el contador del state publico a ${state.value.counter}")
             }
         }
     }

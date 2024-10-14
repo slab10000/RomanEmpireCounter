@@ -43,7 +43,6 @@ class MainActivity : ComponentActivity() {
 
         // Inicializar el BroadcastReceiver con la acción a realizar cuando cambia el día
         dayChangeReceiver = DayChangeReceiver {
-            Log.i("mitag", "CAMBIO DE DIA")
             viewModel.onEvent(InitializeDayEvent)
         }
 
