@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id ("kotlin-kapt")
+    //id ("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp") // Asegúrate de usar la versión correcta
 }
@@ -83,14 +83,16 @@ dependencies {
     // For Dagger-Hilt support
     implementation(libs.hilt.android)
     implementation (libs.androidx.hilt.navigation.compose)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     //Extended material icons
     implementation (libs.androidx.material.icons.extended)
 
     // Room
     implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
+
+    // Replace annotationProcessor with kapt for Room
+    ksp(libs.androidx.room.compiler)
 
     // To use Kotlin Symbol Processing (KSP)
     ksp(libs.androidx.room.compiler)
@@ -100,6 +102,7 @@ dependencies {
 }
 
 // Allow references to generated code
+/*
 kapt {
     correctErrorTypes = true
-}
+}*/
