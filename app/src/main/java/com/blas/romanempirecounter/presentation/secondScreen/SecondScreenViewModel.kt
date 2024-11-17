@@ -52,6 +52,7 @@ class SecondScreenViewModel @Inject constructor(
             SEVEN_DAYS -> today.minusDays(7)
             FilterTypes.MONTH -> today.minusMonths(1)
             FilterTypes.YEAR -> today.minusYears(1)
+            FilterTypes.ALL -> null
         }
         // Usar DateTimeFormatterBuilder para aceptar días y meses con 1 o 2 dígitos
         val formatter = DateTimeFormatterBuilder()
@@ -64,9 +65,13 @@ class SecondScreenViewModel @Inject constructor(
 
 
         // Filtrar los objetos que están dentro de los últimos 7 días
-        val filteredDays = _secondState.value.allDays.filter { day ->
-            val dayDate = LocalDate.parse(day.date, formatter) // Convertir el String a LocalDate
-            dayDate.isAfter(timeFilter) || dayDate.isEqual(timeFilter)
+        val filteredDays = if(timeFilter != null){
+            _secondState.value.allDays.filter { day ->
+                val dayDate = LocalDate.parse(day.date, formatter) // Convertir el String a LocalDate
+                dayDate.isAfter(timeFilter) || dayDate.isEqual(timeFilter)
+            }
+        }else{
+            _secondState.value.allDays
         }
         _secondState.value = _secondState.value.copy(totalCount = filteredDays.sumOf { it.count!! })
 

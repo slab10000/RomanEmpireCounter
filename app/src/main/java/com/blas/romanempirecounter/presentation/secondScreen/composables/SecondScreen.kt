@@ -41,6 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.blas.romanempirecounter.R
 import com.blas.romanempirecounter.presentation.composables.AutoResizedText
 import com.blas.romanempirecounter.presentation.mainpage.intToRoman
+import com.blas.romanempirecounter.presentation.secondScreen.FilterTypes
 import com.blas.romanempirecounter.presentation.secondScreen.FilterTypes.MONTH
 import com.blas.romanempirecounter.presentation.secondScreen.FilterTypes.SEVEN_DAYS
 import com.blas.romanempirecounter.presentation.secondScreen.FilterTypes.YEAR
@@ -114,30 +115,17 @@ fun SecondScreen(
                         tint = Color.Black
                     )
                     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                        DropdownMenuItem(
-                            text = { Text(SEVEN_DAYS.value) },
-                            onClick = {
-                                viewModel.onEvent(OnDropDownClick(SEVEN_DAYS))
-                                buttonText = SEVEN_DAYS
-                                expanded = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(MONTH.value) },
-                            onClick = {
-                                viewModel.onEvent(OnDropDownClick(MONTH))
-                                buttonText = MONTH
-                                expanded = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(YEAR.value) },
-                            onClick = {
-                                viewModel.onEvent(OnDropDownClick(YEAR))
-                                buttonText = YEAR
-                                expanded = false
-                            }
-                        )
+                        for (filterType in FilterTypes.entries) {
+                            DropdownMenuItem(
+                                text = { Text(filterType.value) },
+                                onClick = {
+                                    viewModel.onEvent(OnDropDownClick(filterType))
+                                    buttonText = filterType
+                                    expanded = false
+                                }
+                            )
+                        }
+
                     }
                 }
             }
@@ -149,14 +137,6 @@ fun SecondScreen(
                 fontFamily = FontFamily(Font(R.font.cinzel)),
                 color = Color.White
             )
-            /*Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                fontSize = 50.sp,
-                fontWeight = FontWeight.Bold,
-                text = intToRoman(viewModel.secondState.value.totalCount),
-                fontFamily = FontFamily(Font(R.font.cinzel)),
-                color = Color.White
-            )*/
         }
 
         LazyColumn(
