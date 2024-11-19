@@ -22,28 +22,23 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -60,17 +55,15 @@ import com.blas.romanempirecounter.R
 import com.blas.romanempirecounter.presentation.composables.AutoResizedText
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.blas.romanempirecounter.domain.model.DayModel
 import com.blas.romanempirecounter.presentation.mainpage.MainScreenEvent.CounterOnClick
-import dagger.hilt.android.internal.lifecycle.HiltViewModelFactory
+import java.util.Locale
 import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("RememberReturnType")
 @Composable
 fun MainScreen(){
-    val caesarQuote = remember { mutableStateOf(getRandomCaesarQuote().phrase) }
+    val quote = remember { mutableStateOf(getRandomQuote()) }
 
     //Clipboard
     val clipboard = LocalClipboardManager.current
@@ -147,7 +140,7 @@ fun MainScreen(){
                             viewModel.onEvent(CounterOnClick(viewModel.state.value.counter + 1))
 
                             view.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
-                            caesarQuote.value = getRandomCaesarQuote().phrase
+                            quote.value = getRandomQuote()
                         },
                         onLongClick = {
                             view.performHapticFeedback(HapticFeedbackConstantsCompat.LONG_PRESS)
@@ -184,7 +177,7 @@ fun MainScreen(){
                 ) {
                     AnimatedContent(
                         contentAlignment = Alignment.BottomCenter,
-                        targetState = caesarQuote.value,
+                        targetState = quote.value,
                         transitionSpec = {
                             (slideInHorizontally { height -> height } + fadeIn()).togetherWith(
                                 slideOutHorizontally { height -> -height } + fadeOut())
@@ -193,21 +186,30 @@ fun MainScreen(){
                                 )
                         },
                         label = ""
-                    ){ caesarQuote ->
+                    ){ quote ->
                         Box(
                             modifier = Modifier
                                 .padding(start = 20.dp, end = 50.dp)
-                                .clickable { clipboard.setText(AnnotatedString(caesarQuote)) },
+                                .clickable { clipboard.setText(AnnotatedString(quote.phrase)) },
                         ) {
                             Text(
                                 modifier = Modifier
                                     .padding(start = 30.dp, end = 30.dp)
                                     .align(Alignment.TopCenter),
                                 textAlign = TextAlign.Center,
-                                text = "\"${caesarQuote}\"",
+                                text = "\"${quote.phrase}\"",
                                 style = TextStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold),
                                 fontFamily = FontFamily(Font(R.font.roboto_slab_thin)),
-                                fontSize = MaterialTheme.typography.headlineSmall.fontSize
+                                fontSize = if(quote is GladiatorQuote){
+                                    MaterialTheme.typography.titleMedium.fontSize
+                                }else{
+                                    MaterialTheme.typography.headlineSmall.fontSize
+                                },
+                                color = if(quote is GladiatorQuote){
+                                    Color(0xffb48049)
+                                }else{
+                                    Color.Unspecified
+                                }
                             )
                             Icon(
                                 modifier = Modifier
@@ -247,8 +249,33 @@ fun intToRoman(num: Int): String {
     return stringBuilder.toString()
 }
 
-fun getRandomCaesarQuote(): LatinPhrases {
+fun getRandomQuote(): Quote {
+    val systemLanguage = Locale.getDefault().language
+    return when {
+        chance(10) -> if (systemLanguage == "es") getRandomGladiatorSpanishQuote() else getRandomGladiatorQuote()
+        else -> getRandomLatinQuote()
+    }
+}
+
+fun getRandomLatinQuote(): LatinPhrases {
     val quotes = LatinPhrases.entries.toTypedArray()
     val randomIndex = Random.nextInt(quotes.size)
     return quotes[randomIndex]
+}
+
+fun getRandomGladiatorQuote(): GladiatorQuotes {
+    val quotes = GladiatorQuotes.entries.toTypedArray()
+    val randomIndex = Random.nextInt(quotes.size)
+    return quotes[randomIndex]
+}
+
+fun getRandomGladiatorSpanishQuote(): GladiatorQuotesSpanish {
+    val quotes = GladiatorQuotesSpanish.entries.toTypedArray()
+    val randomIndex = Random.nextInt(quotes.size)
+    return quotes[randomIndex]
+}
+
+fun chance(probability: Int): Boolean {
+    require(probability in 0..100) { "Probability must be between 0 and 100" }
+    return Random.nextInt(100) < probability
 }

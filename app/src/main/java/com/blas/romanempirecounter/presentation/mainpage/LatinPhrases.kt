@@ -1,6 +1,6 @@
 package com.blas.romanempirecounter.presentation.mainpage
 
-enum class LatinPhrases(val phrase: String) {
+enum class LatinPhrases(override val phrase: String): Quote {
     ALEA_IACTA_EST("Alea iacta est"),
     VENI_VIDI_VICI("Veni, vidi, vici"),
     CARPE_DIEM("Carpe diem"),
