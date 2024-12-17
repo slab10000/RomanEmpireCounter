@@ -1,6 +1,6 @@
 package com.blas.romanempirecounter.presentation.mainpage
 
-enum class GladiatorQuotes(override val phrase: String): GladiatorQuote {
+enum class GladiatorQuotes(override val phrase: String, override var explanation: String = ""): GladiatorQuote {
     ARE_YOU_NOT_ENTERTAINED("Are you not entertained?!"),
     WHAT_WE_DO_IN_LIFE("What we do in life echoes in eternity."),
     MY_NAME_IS_MAXIMUS("My name is Maximus Decimus Meridius, commander of the Armies of the North, General of the Felix Legions, loyal servant to the true emperor, Marcus Aurelius. Father to a murdered son, husband to a murdered wife. And I will have my vengeance, in this life or the next."),

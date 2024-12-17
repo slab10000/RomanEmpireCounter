@@ -1,6 +1,6 @@
 package com.blas.romanempirecounter.presentation.mainpage
 
-enum class GladiatorQuotesSpanish(override val phrase: String): GladiatorQuote {
+enum class GladiatorQuotesSpanish(override val phrase: String, override val explanation: String = ""): GladiatorQuote {
     WHAT_WE_DO_IN_LIFE("Lo que hacemos en la vida tiene su eco en la eternidad."),
     MAXIMUS_INTRO("Soy Máximo Décimo Meridio, comandante de los ejércitos del norte"),
     KNOW_WHEN_DEFEATED("Alguien debería saber cuándo está derrotado."),

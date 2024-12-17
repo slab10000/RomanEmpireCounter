@@ -22,19 +22,31 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -56,10 +68,11 @@ import com.blas.romanempirecounter.presentation.composables.AutoResizedText
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.blas.romanempirecounter.presentation.mainpage.MainScreenEvent.CounterOnClick
+import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.random.Random
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("RememberReturnType")
 @Composable
 fun MainScreen(){
@@ -76,6 +89,34 @@ fun MainScreen(){
 
     // Obtener el ViewModel usando hiltViewModel() con el ViewModelStoreOwner actual
     val viewModel: MainScreenViewModel = hiltViewModel(viewModelStoreOwner!!)
+
+
+    val modalSheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
+    if (showBottomSheet){
+        ModalBottomSheet(
+            modifier = Modifier.wrapContentSize(),
+            onDismissRequest = { showBottomSheet = false },
+            sheetState = modalSheetState,
+            windowInsets = WindowInsets.navigationBars
+        ){
+            Column(
+                modifier = Modifier.padding(50.dp)
+            ){
+                Text(
+                    text = "\"${quote.value.phrase}\"",
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic
+                )
+                Spacer(modifier = Modifier.padding(10.dp))
+                Text(text = quote.value.explanation)
+            }
+
+        }
+    }
+
 
     Box(
         modifier = Modifier
@@ -170,7 +211,7 @@ fun MainScreen(){
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = 120.dp)
+                        .padding(bottom = 50.dp)
                     ,
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -189,7 +230,7 @@ fun MainScreen(){
                     ){ quote ->
                         Box(
                             modifier = Modifier
-                                .padding(start = 20.dp, end = 50.dp)
+                                .padding(start = 20.dp, end = 30.dp)
                                 .clickable { clipboard.setText(AnnotatedString(quote.phrase)) },
                         ) {
                             Text(
@@ -218,6 +259,21 @@ fun MainScreen(){
                                 imageVector = Icons.Filled.ContentCopy,
                                 contentDescription = "")
                         }
+                    }
+                    Spacer(modifier = Modifier.size(20.dp))
+                    if(quote.value is LatinQuote){
+                        Icon(
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clickable {
+                                    scope.launch { modalSheetState.hide() }.invokeOnCompletion {
+                                        if (!modalSheetState.isVisible) {
+                                            showBottomSheet = true
+                                        }
+                                    }
+                                },
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = "")
                     }
                 }
             }
@@ -257,9 +313,17 @@ fun getRandomQuote(): Quote {
     }
 }
 
-fun getRandomLatinQuote(): LatinPhrases {
-    val quotes = LatinPhrases.entries.toTypedArray()
-    val randomIndex = Random.nextInt(quotes.size)
+fun getRandomLatinQuote(): LatinQuote {
+    val systemLanguage = Locale.getDefault().language
+    val quotes: Array<LatinQuote>
+    val randomIndex: Int
+    if(systemLanguage == "es"){
+        quotes = LatinPhrasesSpanish.entries.toTypedArray()
+        randomIndex = Random.nextInt(quotes.size)
+    }else{
+        quotes = LatinPhrasesEnglish.entries.toTypedArray()
+        randomIndex = Random.nextInt(quotes.size)
+    }
     return quotes[randomIndex]
 }
 
